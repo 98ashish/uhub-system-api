@@ -214,13 +214,13 @@
 			<version>1.10.6</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
-		<dependency>
+		<!--<dependency>
 			<groupId>23392d43-cbba-4944-843b-46d85fb6d2a2</groupId>
 			<artifactId>uhub_sapi</artifactId>
 			<version>1.0.0</version>
 			<classifier>raml</classifier>
 			<type>zip</type>
-		</dependency>
+		</dependency>-->
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
 			<artifactId>ojdbc8</artifactId>
