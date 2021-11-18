@@ -1,0 +1,1301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd http://www.mulesoft.org/schema/mule/munit-tools http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd ">
+	<munit:config name="uhub-sapi-apikit-test.xml" />
+	<munit:test name="uhub-sapi-apikit-testTest"
+		doc:id="8f2b5314-141e-49f8-b8e9-04aa73b42f7f">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="c2eead22-b539-498f-b395-71898cf13f4f"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:BAD_REQUEST" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="729508c0-4f71-4d51-9d3c-a77adef0f9cc">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="7fcf6862-2c68-4f8d-9cbc-06ce0a837be1">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="862b04cf-90a3-429c-937a-dbfc3e92e2cf" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="1dfd692c-7804-4bf4-af66-55e2a65542a1" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert doc:name="Assert expression" doc:id="bd3f4f33-2df8-4b13-99df-fcb19cab789a" >
+				<munit-tools:that ><![CDATA[#[import * from dw::test::Asserts 
+ ---
+payload must [notBeNull(),beObject(),$.code must equalTo(400),$.message must equalTo("Bad request"),$.transactionId must notBe(beBlank()),(($.dateTime as Date)-now()).hours must equalTo(0)]]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="uhub-sapi-apikit-404-Test"
+		doc:id="256ab07c-a893-42a0-a882-544a470cab17">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="f774e8d8-de9c-4f5d-a5c5-9715597e2551"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_FOUND" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="60f10041-8e85-454e-b5ba-d177771944b7">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="39a8de09-1349-4d02-919e-615d2a5b31ff">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="d635647f-ffcd-4d46-a4b4-60a703cd3452" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="c24822ba-aa87-442e-b312-59aa0c388441" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="490985cf-3e58-47ad-993c-eb985b9485a3"
+				actual="#[payload.code as String]" expected="404" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="uhub-sapi-apikit-415-Test"
+		doc:id="b8bdae0e-edf0-40a9-b2f1-0fbcf5978064">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="2b208fec-215d-4520-a93e-e13701f650d0"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:UNSUPPORTED_MEDIA_TYPE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="24dcb085-9dde-4eb5-93f4-6543c67d046f">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="cbea344c-4cd0-4f5f-bb72-ce04542a5713">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="6411a8c3-2fee-43a4-88da-b388a48c8b5c" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="16922271-967a-43ec-a0f5-530c0ff050a8" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="91325d76-e22e-486a-8cee-fc4994fc25b1"
+				actual="#[payload.code as String]" expected="415" />
+		</munit:validation>
+	</munit:test>
+  <munit:test name="uhub-sapi-apikit-httpBadTest"
+		doc:id="1f160b1f-2148-4299-a550-3609543f6fed">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="c30c5bcf-6201-4255-9ea3-7be575028352"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:error typeId="HTTP:BAD_REQUEST" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="f3e6d422-0a19-44d1-a7fc-8b52ce18b36a">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="9f225654-f432-4697-867e-5afc40adb8ad">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="d107c3d8-ea87-4c02-9b21-4ae6f290008b" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="cdd6a38d-e906-4d84-95a0-799d7375844b" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="5dd35f5d-2c67-4a36-ad3c-cd31e956127d"
+				actual="#[vars.httpStatus as String]" expected="400" />
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="uhub-sapi-apikit-http-client-security-Test"
+		doc:id="becb62f9-7cd2-4367-acf5-b40f4d432be1">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="78af488c-57f9-4af5-9a34-a839a1df6f68"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:error typeId="HTTP:CLIENT_SECURITY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="2cafeaa6-104b-46e4-ab6a-a7360e70b28c">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="77b44804-ffe9-45c1-9b0e-445c19360507">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="65608b72-7c15-4331-a3cb-9f617996be5d" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="ba10fd2a-9585-407e-8066-a4c053c5258f" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="9e6dbb73-8ce1-4827-9c81-2281c030ff60"
+				actual="#[vars.httpStatus as String]" expected="401" />
+		</munit:validation>
+	</munit:test>
+	
+	
+	<munit:test name="uhub-sapi-apikit-405-Test"
+		doc:id="c3a79307-0c69-4c1a-a19d-752bf1348a9c">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="ea7b7e5b-fa31-488a-8471-ff532e483a6a"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:METHOD_NOT_ALLOWED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="63305da3-bcd5-4b7f-b61a-f46fd6da44e5">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="d53b102e-9f62-4a94-9b8a-999b411e189e">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="44b161fb-9dc9-4140-a330-8bf1b2cd5b8e" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="8fd26fda-c666-46e8-bfee-c85b0044c432" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="455ecbe6-bfbf-4294-b3c0-012614c0cd84"
+				expected="405" actual="#[payload.code as String]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="uhub-sapi-apikit-406-Test"
+		doc:id="71e0b600-a169-4674-be08-9b820274969b">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="2f40a96b-d686-4b45-9391-7e7aec169ecd"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_ACCEPTABLE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="3200db35-d827-4b24-8731-3cb57a8a2941">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="4bf13a8a-7173-4b1e-b7ed-7e8cc156a141">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="e99011d3-a616-46cb-8d80-4888dfebf7f3" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="667fa2c3-65bc-4d7d-892a-c9989f6c59a2" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="804f0fe3-df00-4d1d-9be4-518e3abe3294"
+				actual="#[payload.code as String]" expected="406" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="uhub-sapi-http-forbidden-Test"
+		doc:id="d019e996-a2ea-4535-9515-4ec2670ab707">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="6898a81d-ba25-4b24-b18c-37940ba1d6f4"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:FORBIDDEN" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="f460575f-3fea-4a53-8495-482375869e7e">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="5da3c185-bad2-45e3-b6ac-ac8923a43587">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="140e2df9-7be3-4800-a9de-f0504c759a01" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="c16b19ce-0bc5-48f5-a032-f1959498808f" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="4c83f24b-4e06-4fbe-8d4d-d12297446a3b"
+				actual="#[payload.code as String]" expected="403" />
+		</munit:validation>
+	</munit:test>	
+	<munit:test name="uhub-sapi-http-connectivity-Test"
+		doc:id="6635ee8d-6a75-46d0-aeb7-7846251ffb62">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="f3b1f859-f300-4cfd-a3fc-c366dfc6a8fb"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:CONNECTIVITY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="03fead55-4dc3-4951-92f1-570cf0990c99">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="18d7f6f5-a592-4faf-be19-1b18de67cb99">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="b9509d92-dd6b-4bb3-9acb-8d6c507998b6" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="690217f2-3ab6-4813-a51a-a6af1989ede7" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="b48a9479-e4d2-4a78-a93e-ed6294b12742"
+				actual="#[payload.code as String]" expected="503" />
+		</munit:validation>
+	</munit:test>	
+	
+	<munit:test name="uhub-sapi-http-internal-server-Test"
+		doc:id="4d72f65a-d741-4691-96b2-aa291542850a">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="0f0e3ad0-2a07-45e8-9a82-3bb4edb8f153"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:INTERNAL_SERVER_ERROR" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="8dea9057-2d42-4df4-8ed8-0ea5c8a42054">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="8bd643be-e763-491a-831a-004ce2b90370">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="c05c1f28-7a2c-424a-a1dd-26c69395b9c0" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="72f096c2-61e8-4deb-9def-701cd092f1b5" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="b9c6c27f-e319-4cd8-9746-a43c26f7fc28"
+				actual="#[payload.code as String]" expected="500" />
+		</munit:validation>
+	</munit:test>	
+	
+	
+		<munit:test name="uhub-sapi-http-method-not-allowed-Test"
+		doc:id="185a7e10-6269-4bde-87ae-e2c6d1a94b3d">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="19e93265-7c16-4e2e-94c6-9f9af0dbda7a"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:METHOD_NOT_ALLOWED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="8bd57e6c-9029-4fd6-84e7-df37d5cb223b">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="6429442a-dd90-4141-85ad-eb20c23010bb">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="79487a9f-26c2-4d42-a1f2-52ae8fdda281" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="874a8a6e-546a-42f6-8b7a-00337e6be485" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="7adeba90-56cd-49e3-99c4-af6436624c50"
+				actual="#[payload.code as String]" expected="405" />
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="uhub-sapi-http-not-acceptable-Test"
+		doc:id="b63ae7df-9d5f-417e-b720-89f445560d3a">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="65fa805c-87c6-42f5-ba7e-6bf16d20e3d8"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:NOT_ACCEPTABLE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="5705a8f8-4e43-4858-b029-42638ca488be">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="41321405-d5f2-4f91-97a0-3c76f3f15f93">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="3393160e-e4b7-46a9-86a0-5199810585e0" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="665a4829-da53-46e5-95ce-080ff485ba4d" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="9cfc1a12-292d-4f57-9050-0f724d153c9d"
+				actual="#[payload.code as String]" expected="406" />
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="uhub-sapi-http-not-found-Test"
+		doc:id="70c7ecae-6eaf-4209-b879-4d7bf1ca28aa">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="1469b41d-e2c6-4bfe-a220-ce5a300f9282"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:NOT_FOUND" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="78c6300e-275d-425b-b938-e69630a32d36">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="104a3e51-c809-47f3-8cff-1ec6919647c7">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="8fa158c6-519d-44b7-9357-01b4fbeb5151" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="cfa51238-a4df-45fc-a28c-63b3deb236cb" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="1fc0bee4-0ff9-47a4-a6d0-716a734308af"
+				actual="#[payload.code as String]" expected="404" />
+		</munit:validation>
+	</munit:test>
+	
+		<munit:test name="uhub-sapi-http-parsing-Test"
+		doc:id="f70c2631-a408-444a-b867-7dac22ba4bee">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="b87738d2-10f6-4d03-bf64-5391409f2255"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:PARSING" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="a9f30e88-0054-4edf-af34-c1010e84f9d0">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="ac5dbe0b-ef31-4e69-9217-4d0bb2c2ab1b">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="1434278e-376e-4589-82dc-61ef8ac03c9e" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="6b236d67-b4cb-4bf2-a948-1ca7df4c1920" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="6444dd78-a6ff-4b04-8dd9-6a6720b253a3"
+				actual="#[payload.code as String]" expected="400" />
+		</munit:validation>
+	</munit:test>
+	
+	
+		<munit:test name="uhub-sapi-http-retry-exhausted-Test"
+		doc:id="78a67dcf-da90-4fe9-b5f8-56de1a284e36">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="404cdaac-d3ee-45e9-8087-f118b745707c"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:RETRY_EXHAUSTED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="cf875236-1f52-433b-b5cb-f65dbf37750b">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="35463e5c-ec6f-428a-adc7-18df24cdfb08">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="bef06689-d608-4e58-b60b-eca95b20483b" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="d103699c-6aa2-460c-842f-b1e3495011e5" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="25818a12-c588-4487-b6fa-87712f4abcf1"
+				actual="#[payload.code as String]" expected="503" />
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="uhub-sapi-http-security-Test"
+		doc:id="6de5e18b-931b-4f4b-bd72-56cd87b51633">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="50116762-0560-4af0-b63e-962954db9aec"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:SECURITY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="fc2e56f0-beb9-496b-998d-8247476730c6">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="da44a2b3-d6f3-4e49-bcde-bbcdbc0f8207">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="a153eb2e-00d1-4332-8978-470b9f4c90cc" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="fe8993c7-9e9a-4546-9746-3ac3cfb6b5d4" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="14921dbe-9f37-4ccb-a95a-3ef8bce7792d"
+				actual="#[payload.code as String]" expected="401" />
+		</munit:validation>
+	</munit:test>
+	
+	
+	<munit:test name="uhub-sapi-http-timeout-Test"
+		doc:id="452ab9f6-cba8-44c1-a665-729464e2dd2a">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="52684cc7-aa82-42ab-8a83-73bfe4c5b913"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:TIMEOUT" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="92cbbd2f-742e-4560-a0a0-00fdf853c269">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="0e6eb17b-c591-4f6e-bf71-7531d74fba05">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="d1b5229a-1ebe-4f80-92cb-5c869053c9cf" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="cb954d99-83a9-45c1-8ddc-2e412e70c8d1" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="b8a67d10-ccb6-44e2-a6de-3e6b059485c8"
+				actual="#[payload.code as String]" expected="504" />
+		</munit:validation>
+	</munit:test>
+	
+	
+		<munit:test name="uhub-sapi-http-too-many-request-Test"
+		doc:id="1c86e4f8-c60d-42fb-97ff-46c30ff106c4">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="8f39f040-aaec-45f1-aa69-edef182c966c"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:TOO_MANY_REQUESTS" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="b7ff3399-0b32-4788-b6bd-ed162be3deb5">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="607c15a2-954b-41c1-985f-791ecded1221">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="57a0630d-193d-49e5-b0e1-f6bab45dfd24" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="b4630123-5d82-45b6-bd61-6c9aed598972" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="b1b91f0a-d2a7-4be2-8436-da7163ca9b01"
+				actual="#[payload.code as String]" expected="429" />
+		</munit:validation>
+	</munit:test>
+	
+	
+		<munit:test name="uhub-sapi-http-unauthorized-Test"
+		doc:id="94851469-c621-4b2f-929c-024e566c19b0">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="8cd80e04-e9e8-45ce-80ff-6853e7333d31"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:UNAUTHORIZED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="f82f220c-81cd-4118-9ea0-5a87e4bab79e">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="c31527ca-01e3-41e5-b3eb-562b7803103e">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="16d77dec-1db0-4692-84bd-cda944b218ec" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="a94741a5-5f89-4581-93f5-4396789e8492" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="1f3818a7-ecb4-42a7-af9f-c20602e54e15"
+				actual="#[payload.code as String]" expected="401" />
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="uhub-sapi-http-UNSUPPORTED_MEDIA_TYPE-Test"
+		doc:id="0458e1fe-f665-4f36-8e88-c608de4228a5">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="f041e3ad-a83d-4a3c-bfc0-80ed2b00366b"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:UNSUPPORTED_MEDIA_TYPE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="937c6c4f-6659-4b8e-ab3f-82906f690e20">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="f20b0fb6-a9a8-44bd-896b-5fed8ce0fba2">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="eea75d80-ab36-445f-adb2-1a2a203a1483" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="1ae4d381-1936-41ea-98bd-4f958520599b" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="40c5b42d-3d61-430b-9589-4f36b3d310ed"
+				actual="#[payload.code as String]" expected="415" />
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="uhub-sapi-STREAM_MAXIMUM_SIZE_EXCEEDED-Test"
+		doc:id="2e4327a1-a338-498d-a22b-bf717c8e655c">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="e722d5ef-e888-4d57-abf0-a45b1a7b90ed"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="STREAM_MAXIMUM_SIZE_EXCEEDED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="4691ad13-e70a-47de-a05e-d4b2d7be4029">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="633b40a9-36c5-4549-85fa-8481da652be1">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="b2edab65-7870-4a80-aa58-86e8029bb8f9" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="ce7a75a2-339a-4edf-a3fc-4c0b0b3bf263" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="6edfd597-a12c-4a43-98f6-23de4b08b80a"
+				actual="#[payload.code as String]" expected="500" />
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="uhub-sapi-RETRY_EXHAUSTED-Test"
+		doc:id="a3d27f02-777e-49b0-a4e8-593cf2efa4f5">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="719230e6-ad3a-4091-8197-f06364836f7b"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="RETRY_EXHAUSTED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="b9a23a74-ece6-4c56-9f1f-160d748784f0">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="ed79ba09-2ef4-4215-845b-0ff865ec78d0">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="1fb231f8-e49b-4a11-ade8-2e90d26b65bc" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="3febadab-01b4-4978-9766-110abf5297c7" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="cf955b56-9e5c-4588-be28-b0eabba13a93"
+				actual="#[payload.code as String]" expected="503" />
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="uhub-sapi-REDELIVERY_EXHAUSTED-Test"
+		doc:id="d1ef76cc-740a-4a83-9bfe-ea923cb8c469">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="9db4a3a8-3a53-4f96-b4f1-169e09764e33"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="REDELIVERY_EXHAUSTED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="ec8528af-1d7f-4541-9e35-21124734299a">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="61a23afb-642e-48dd-a8c7-c2de99473c7f">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="ff274e1c-f0fb-4959-a8f4-ec01ed525824" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="b2f6f050-35dc-4a93-b316-21db58edf84c" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="728159d6-775c-49e2-8f2e-557cb7465d2a"
+				actual="#[payload.code as String]" expected="503" />
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="uhub-sapi-CONNECTIVITY-Test"
+		doc:id="3cd37677-246b-4128-81bb-df28d2f4f8a5">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="b7ce0e80-befb-450e-a22c-880b36f56c4d"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="CONNECTIVITY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="62865b67-4cd9-4ed1-a583-05aa50fc11da">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="d701cf98-0b7d-4615-b2d5-e9939b8b36e2">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="ffd42ffa-f0a2-4324-93c2-bc3ff2332d11" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="b392abff-d6b2-4bda-9438-163505938c8a" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="5aa7f743-42af-49fd-b4f4-03275a44ba62"
+				actual="#[payload.code as String]" expected="503" />
+		</munit:validation>
+	</munit:test>
+	
+		<munit:test name="uhub-sapi-TIMEOUT-Test"
+		doc:id="d69dc697-694b-4235-a1f6-fcc5643f2d70">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="cfd07051-ec3c-4c29-95a3-5552a3c1bfa3"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="TIMEOUT" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="dd8a49a1-f955-4a17-bc58-ef58487cbaa2">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="ffc864a8-1b25-4cc4-8c02-773893a2764c">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="c04213c2-5ac5-4802-9941-a3915c51b906" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="4e9dd575-14e4-4748-b73b-114f3a9a7248" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="447f5af5-6e0b-4032-b0a8-435c367f3ce2"
+				actual="#[payload.code as String]" expected="504" />
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="uhub-sapi-TRANSFORMATION-Test"
+		doc:id="a48c30cb-6cdf-4170-8dfe-eccb09ae2cbb">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="81b72562-7149-40ea-b39b-968bf0ad41eb"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="TRANSFORMATION" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="03c1658c-b261-497b-885f-b4fb3763af88">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="79359d89-57e5-4247-9248-e6eabb0d3fb8">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="2a48b9a0-6e4a-4fbc-8b0b-bcad9753e985" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="a519d473-9222-4058-8b05-62b800a504ee" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="51bd5e81-591b-4532-9d5d-bbf2637f5ffc"
+				actual="#[payload.code as String]" expected="400" />
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="uhub-sapi-EXPRESSION-Test"
+		doc:id="b9e05a4c-7d0b-4a72-b24d-277fd07e1d3c">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="f5d62d90-0a9c-4e78-b49f-67ec369e254e"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="EXPRESSION" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="1424a027-b98e-4c24-b9a0-f196980d26a7">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="cb82f475-166f-47d5-bb8b-5db362d0c829">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="d0afbe2d-1c13-4eb6-92dc-6572b1956ef9" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="362fd7b2-b257-4e07-bde7-eb71481e9d35" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="ca436e40-3485-41b6-b94f-cd71531c28ba"
+				actual="#[payload.code as String]" expected="400" />
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="uhub-sapi-ROUTING-Test"
+		doc:id="e01aa746-b020-45d0-9f7f-cf49e7af3db9">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="b7fc47f7-a6d3-405e-91dc-b45760d86d7b"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="ROUTING" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="99efb675-b9f2-4d93-b176-34a55da27f0a">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="b6f0f9ed-5588-4d9d-9391-92ae96279300">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="36223257-f1bd-45d9-81e9-8787560def86" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="34eda5b9-b303-466b-aacc-255df8897614" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="e768ec60-ab72-4565-a1b7-4a3a369ae6fb"
+				actual="#[payload.code as String]" expected="500" />
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="uhub-sapi-SECURITY-Test"
+		doc:id="bbda237a-fcb2-4c8d-98b2-6de92a5a99e6">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="fc95ebe0-2db6-46eb-b940-bc2c771dc81d"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SECURITY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="7a68a3de-04b0-4eca-ae9b-d14643a4f07a">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="44e245d1-9661-43d3-9d2d-60d8d4560b02">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="74d7614c-d3b0-48d6-aa81-3b810f5d40d5" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="c009f87c-58d7-4302-9cfa-f232036db59d" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="445ec27c-ed3d-4c34-a9b3-da24d61d5183"
+				actual="#[payload.code as String]" expected="401" />
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="uhub-sapi-ANY-Test"
+		doc:id="396aa509-49a9-4b59-a371-c9e4496dcb8a">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="d1fd8ec0-82e3-4fc3-99eb-0d3bacbb71b7"
+				processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1"
+						attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="ANY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event"
+				doc:id="533fa41c-16d4-4c53-ae8e-872bf7e11e32">
+				<munit:payload
+					value="#[output application/json --- readUrl('classpath://uhubsapimaintest\set-event_payload400.dwl')]" />
+				<munit:attributes
+					value="#[readUrl('classpath://uhubsapimaintest\set-event_attributes3.dwl')]" />
+			</munit:set-event>
+			<try doc:name="Try" doc:id="9a3dea8d-96d9-4c54-a54b-4500bc87fe91">
+				<flow-ref doc:name="Flow Reference"
+					doc:id="c491f3d0-094c-453a-8585-ee53f605c028" name="uhub_sapi-main" />
+				<error-handler>
+					<on-error-continue enableNotifications="true"
+						logException="true" doc:name="On Error Continue"
+						doc:id="f01287eb-5f05-4582-bdec-e19644d47e01" />
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals
+				doc:name="Assert equals"
+				doc:id="71966956-010b-4b28-85ec-517e6e8fc3b7"
+				actual="#[payload.code as String]" expected="500" />
+		</munit:validation>
+	</munit:test>
+	
+</mule>

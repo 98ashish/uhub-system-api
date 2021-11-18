@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="post:\cases:application\json:uhub_sapi-config"
+		doc:id="2bc23a13-7aa1-473a-b1e0-6d530cc35562">
+		<logger level="INFO" doc:name="Start Log"
+			doc:id="dd28a78c-f77e-4f0c-a2de-aff56309cd17"
+			message='transactionID: #[vars.transactionId]], message: Started register covid case flow, payload: #[payload]' />
+		<ee:transform doc:name="Build payload"
+			doc:id="8034369c-e03a-4687-9929-03599bea6af8">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+var currentDate = now() as String { format: "yyyy-MM-dd" }
+---
+{
+	source: payload.source,
+	case_type: payload.caseType,
+	first_name: payload.firstName,
+	last_name: payload.lastName,
+	phone: payload.phone,
+	email: payload.email,
+	date_of_birth: payload.dateOfBirth as String {
+		format: "yyyy-MM-dd"
+	},
+	national_id: payload.nationalID,
+	national_id_type: payload.nationalIDType,
+	street_address: payload.address.streetAddress,
+	city: payload.address.city,
+	state: upper(payload.address.state),
+	postal: payload.address.postal,
+	country: payload.address.country,
+	create_date: currentDate,
+	update_date: currentDate,
+	create_by: "UHIS",
+	update_by: "UHIS"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<flow-ref doc:name="Insert case"
+			doc:id="cdc7cfaf-c512-457f-b709-964567ca9844"
+			name="insert-covid-case-sub-flow" />
+		<ee:transform doc:name="Build Response" doc:id="d0b99adf-8f67-43fb-a7c8-923838efbc7e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	caseID: payload[0].CASE_ID
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End Log" doc:id="d452a6b4-ae2a-40dd-bc1b-d4a4f713bc4b" message='transactionID: #[vars.transactionId]], message: Completed register covid case flow, payload: #[payload]"' />
+	</flow>	</mule>

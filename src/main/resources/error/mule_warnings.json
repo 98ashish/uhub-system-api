@@ -1,0 +1,73 @@
+{
+	"STREAM_MAXIMUM_SIZE_EXCEEDED":{
+		"code": 500,
+		"message": "Buffer Size exceeded the maximum",
+		"description": "This will return when the buffer size is exceeded the maximum size that given",
+		"dateTime": "2020-05-31T06:08:02",
+		"transactionId": "42d37820-61ee-47b4-907d-fa15869f3c4d"
+	},
+	"RETRY_EXHAUSTED":{
+		"code": 503,
+		"message": "Retry Exhausted for given request",
+		"description": "The resource identified by the request is not capable of generating response entities according to the request accept headers",
+		"dateTime": "2020-05-31T06:12:02",
+		"transactionId": "21h70954-61ee-47b4-907d-fa15869f3c4d"
+	},
+	"REDELIVERY_EXHAUSTED":{
+		"code": 503,
+		"message": "Redelivery Exhausted for the given request",
+		"description": "The resource identified by the request is not capable of generating response entities according to the request accept headers",
+		"dateTime": "2020-05-31T06:15:02",
+		"transactionId": "49b39520-61ee-47b4-907d-fa15869f3c4d"
+	},
+	"CONNECTIVITY":{
+		"code": 503,
+		"message": " Service unavailable ",
+		"description": "The (upstream) service is temporarily not available",
+		"dateTime": "2020-05-31T06:18:02",
+		"transactionId": "48n32920-69ne-47b4-907d-fa15869f3c4d"
+	},
+	"TIMEOUT":{
+		"code": 504,
+		"message": "Timeout occurred to process the request",
+		"description": "This indicates that the timeout occurred while processing the request",
+		"dateTime": "2020-05-31T06:45:02",
+		"transactionId": "49d32520-61ee-47b4-907d-fa15869f3c4d"
+	},
+	"TRANSFORMATION":{
+		"code": 400,
+		"message": "Transformation exceptions occurred",
+		"description": "The exception occurred while transforming a value",
+		"dateTime": "2020-05-31T06:55:02",
+		"transactionId": "87g32520-61ee-47b4-907d-fa15869f3c4d"
+	},
+	"EXPRESSION":{
+		"code": 400,
+		"message": "Error while parsing expression",
+		"description": "This error will have occurred while evaluating the expression in Data weave",
+		"dateTime": "2020-05-31T06:58:02",
+		"transactionId": "42b32520-61ps-47b4-907d-fa15869f3c4d"
+	},
+	"ROUTING":{
+		"code": 500,
+		"message": "Routing exception occurred",
+		"description": "This indicates an error occurred while routing a message. For example, using the Round Robin router",
+		"dateTime": "2020-05-29T07:02:02",
+		"transactionId": "68f32520-61ee-49b4-907d-fa15869f3c4d"
+	},
+	"SECURITY":{
+		"code": 401,
+		"message": "Security exception occurred",
+		"description": "This indicates a security error occurred, when invalid credentials being received or an expired token being used.",
+		"dateTime": "2020-05-29T07:15:02",
+		"transactionId": "49q32520-98fg-47b4-907d-fa15869f3c4d"
+	},
+	"ANY":{
+		"code": 500,
+		"message": " Internal server error ",
+		"description": "The server encountered an unexpected condition which prevented it from fulfilling the request ",
+		"dateTime": "2020-05-29T05:58:02",
+		"transactionId": "44b32520-61ee-47b4-907d-fa15869f3c4d"
+	}
+
+}

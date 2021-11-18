@@ -1,0 +1,49 @@
+#%RAML 1.0 Library
+usage: we define common data types, firstly we define an error object, which is the structure of response in case of error which are structured as \n 1.code- the http failure status code \n 2. message- the http error type \n 3. description- the description of the error in human readable format \n 4. transactionid  - represents which transaction caused error \n 5.datetime- the time the error was raised \n 6. optional validationErrors which gives the reason of bad-request failure as a list  explaining the fieldname and description for the url \n 7. additional doc url- a link which give additional details about error that occured
+
+types:
+  fieldValidationType:
+    type: object
+    properties:
+      field:
+        type: string
+        required: true
+        description: missing or non complaint field name 
+      description: 
+        type: string
+        required: true
+        description: validation error description
+
+  errortype:
+    type: object
+    properties:
+      code:
+        type: number
+        description: failure status code 
+        required: true
+      message:
+        type: string
+        required: true
+        description: failure message
+      description:
+        type: string
+        required: false
+        description: a human readable message for the reason of error
+      validationErrors:
+        type: fieldValidationType[]
+        required: false
+        description: in case of bad request, helps to identify which field is missing or not complaint
+      dateTime:
+        type: datetime
+        required: true
+        description: timestamp of error
+      transactionId:
+        type: string
+        required: true 
+        description: id of the failed transaction  
+      additionalDocUrl:
+        type: string
+        required: false
+        description: url to present additional info
+      
+      
