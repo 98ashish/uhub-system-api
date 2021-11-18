@@ -1,0 +1,51 @@
+#%RAML 1.0
+title: uhub-sapi
+baseUri: https://uho-{env}-uhub-sapi/covid/{version}
+baseUriParameters:
+  env:
+    enum:
+      - dev
+      - test
+      - uat
+      - prod
+version: v1
+protocols:
+  - HTTP
+  - HTTPS
+traits:
+  transactionId: !include /exchange_modules/23392d43-cbba-4944-843b-46d85fb6d2a2/transaction-header/1.0.0/transaction-header.raml
+  clientId: !include /exchange_modules/23392d43-cbba-4944-843b-46d85fb6d2a2/client-id-required/1.0.0/client-id-required.raml
+
+uses: 
+  common-data-types: /exchange_modules/23392d43-cbba-4944-843b-46d85fb6d2a2/common-data-types/1.0.1/common-data-types.raml
+  uhub_data_types: /uhub_data_types/uhub_data_types.raml
+  
+
+/cases:
+  post:
+    is: [clientId,transactionId]
+    body:
+      application/json:
+        type: uhub_data_types.case
+        example: !include /examples/covid-case-request.json
+    responses:
+      201:
+        body:
+          application/json:
+            type: uhub_data_types.case_response
+            example: !include /examples/covid-case-response.json
+      400:
+        body:
+          application/json:
+            type: common-data-types.errortype
+            example: !include /examples/400.json
+      500:
+        body: 
+          application/json:
+            type: common-data-types.errortype
+            example: !include /examples/500.json
+      503:
+        body: 
+          application/json:
+            type: common-data-types.errortype
+            example: !include /examples/503.json

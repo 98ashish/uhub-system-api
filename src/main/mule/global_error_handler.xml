@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<error-handler name="global-error-handler"
+		doc:id="62689d05-fe06-4ce5-99d5-43e5c408a301">
+		<on-error-propagate enableNotifications="true"
+			logException="true"
+			when="#[['HTTP','APIKIT'] contains error.errorType.namespace ]">
+			<set-variable
+				value="#[output application/json --- readUrl('classpath://error/mule_errors.json')]"
+				doc:name="set error responses"
+				doc:id="07182829-4835-462b-a311-f4a1a31e06d4"
+				variableName="mule_error" />
+			<set-variable
+				value='#[output application/json&#10;---&#10;name:if(isEmpty(error.errorType.namespace) or isEmpty(error.errorType.identifier)) ("ANY") else ((error.errorType.namespace default "") ++ ":" ++ (error.errorType.identifier default ""))]'
+				doc:name="set error type"
+				doc:id="c70d22a9-dd30-4851-b099-3398c4f542ff"
+				variableName="errorString" />
+			<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:name="build error response">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+var detailedDescription=["APIKIT:BAD_REQUEST"]
+---
+(vars.mule_error[(vars.errorString.name)]) update {
+       case .transactionId -> vars.transactionId
+       case .dateTime ->  (now() as String { format: "yyyy-MM-dd'T'HH:mm:ss'Z'" })
+       case .description if(detailedDescription contains (vars.errorString.name)) -> error.description splitBy "\n"
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[400]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+                <set-variable value="#[payload.code]" doc:name="Set httpStatus" doc:id="6a372418-e11a-478e-ab69-abd1eda4b616" variableName="httpStatus"/>
+			<logger level="INFO" doc:name="Error Log" doc:id="34ca51e9-aefa-4454-951d-4eb9f05308df" message="Transaction [#[vars.transactionId]] - Error Code [#[vars.httpStatus]] - Error Message [#[error.errorType.identifier default '']] - Error Description [#[error.description default '']]-Payload[#[payload]]"/>
+            </on-error-propagate>
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="d781425d-7de3-449f-8558-409dc9dec175" >
+			<set-variable
+				value="#[output application/json --- readUrl('classpath://error/mule_warnings.json')]"
+				doc:name="set error responses"
+				doc:id="c39c7781-c090-4165-bb7d-0ebbf44a5913"
+				variableName="mule_error" />
+			<ee:transform doc:name="build error response" doc:id="001c2bcf-a479-45d3-931f-45f00f32d249" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+(vars.mule_error[(error.errorType.identifier default "ANY")]) ]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[400]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<set-variable value="#[payload.code]" doc:name="Set httpStatus" doc:id="672cfcf6-e611-4033-b9c4-8a479861c477" variableName="httpStatus" />
+			<logger level="INFO" doc:name="Error Log" doc:id="93ba70c6-b929-4efd-a0a1-8b03970d6a6d" message="Transaction [#[vars.transactionId]] - Error Code [#[vars.httpStatus]] - Error Message [#[error.errorType.identifier default '']] - Error Description [#[error.description default '']]-Payload[#[payload]]"/>
+		</on-error-continue>
+        
+</error-handler>
+ 
+</mule>

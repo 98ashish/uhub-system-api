@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="register-covid-case-suite.xml" />
+	<munit:test name="register-covid-case-impl-test" doc:id="c577dd9c-cc05-4c3b-884a-2536271fb8d4" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Insert case" doc:id="e33b6f3a-bcea-4add-876f-2e6d632fa8ee" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="cdc7cfaf-c512-457f-b709-964567ca9844" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://registercovidcaseimpltest\mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://registercovidcaseimpltest\mock_variable_.dwl')]" />
+						<munit-tools:variable key="transactionId" value="#[output application/java --- readUrl('classpath://registercovidcaseimpltest\mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Input" doc:id="1fb459ce-11e9-4979-836a-fd8db4d5057d">
+				<munit:payload value="#[output application/json --- readUrl('classpath://registercovidcaseimpltest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://registercovidcaseimpltest\set-event_attributes.dwl')]" />
+				<munit:variables>
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://registercovidcaseimpltest\set-event_variable_.dwl')]" />
+					<munit:variable key="transactionId" value="#[output application/java --- readUrl('classpath://registercovidcaseimpltest\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post:\cases:application\json:uhub_sapi-config" doc:id="a7dcc5b1-e09b-4fa1-a9b7-af988ee92a90" name="post:\cases:application\json:uhub_sapi-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="b8395fef-c8fb-4e03-9e1d-941d66bb283c" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import registercovidcaseimpltest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+
+<munit:test name="register-covid-case-test" doc:id="a8648519-7a66-4926-94c1-8fe21a306405" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="3c6dd8e2-0cd7-471f-bab0-3725af999a7d" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="13cc7ebf-576f-417f-aa51-fd79c8c96fc1" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://registercovidcasetest\mock_payload.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://registercovidcasetest\mock_variable_.dwl')]" />
+						<munit-tools:variable key="httpStatus" value="#[readUrl('classpath://registercovidcasetest\mock_variable_1.dwl')]" />
+						<munit-tools:variable key="transactionId" value="#[output application/java --- readUrl('classpath://registercovidcasetest\mock_variable_2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Input" doc:id="1f098d40-216e-4702-8724-33dea4b5ef2d">
+				<munit:payload value="#[output application/json --- readUrl('classpath://registercovidcasetest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://registercovidcasetest\set-event_attributes.dwl')]" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to uhub_sapi-main" doc:id="2642cb13-f7a2-4eca-bc48-1707547cee0f" name="uhub_sapi-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="8af7b48d-ce07-49d4-9546-95a5e3e473f7" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import registercovidcasetest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+<munit:test name="insert-covid-case-sub-flow-test" doc:id="bdddd003-561b-4683-94ca-9797e4fc93ec" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Insert" doc:id="ce786ed0-3189-416b-a0d4-d7569d75c271" processor="db:insert">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="427217de-04a2-41e6-82f5-7aab894d8c76" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://insertcovidcasesubflowtest\mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://insertcovidcasesubflowtest\mock_variable_.dwl')]" />
+						<munit-tools:variable key="transactionId" value="#[output application/java --- readUrl('classpath://insertcovidcasesubflowtest\mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Input" doc:id="2446263a-88c1-4f91-91d8-e84e05c92004">
+				<munit:payload value="#[output application/json --- readUrl('classpath://insertcovidcasesubflowtest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://insertcovidcasesubflowtest\set-event_attributes.dwl')]" />
+				<munit:variables>
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://insertcovidcasesubflowtest\set-event_variable_.dwl')]" />
+					<munit:variable key="transactionId" value="#[output application/java --- readUrl('classpath://insertcovidcasesubflowtest\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to insert-covid-case-sub-flow" doc:id="34282775-5fb2-4670-b75d-c0e395dc64d1" name="insert-covid-case-sub-flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="343f63fa-2e3e-45d8-a65f-53e84c328b6c" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import insertcovidcasesubflowtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+
+</mule>
