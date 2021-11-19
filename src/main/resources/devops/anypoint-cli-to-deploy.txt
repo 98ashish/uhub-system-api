@@ -1,0 +1,2 @@
+anypoint-cli --username=${username} --password=${password} --environment${env} runtime-mgr cloudhub-application deploy --runtime=4.4.0 --workers=1 --workerSize=0.1 --region=${region} --property=${anypoint.platform.client_id} --property=${anypoint.platform.client_secret} --property=${envi} --property=${sec.key} ${app-name} ${jarpath}
+ 
