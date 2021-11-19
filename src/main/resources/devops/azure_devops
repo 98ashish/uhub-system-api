@@ -1,0 +1,41 @@
+Steps to follow
+1. create a free azure devops account using your github account, Azure provides a free trial.
+2. now azure will prompt to create a project, ie a azure project inside which we create our pipeline
+3. Note, there are two key things important for our project , one is "LIBRARY" which stores sensitive data
+	and "PIPELINE" helps to build out pipeline
+4. using a library create settings.xml which has server details and profile details, create this and include
+	a reference for the same.
+5. create a pipeline project which gives us a option to choose maven template, along with this template 
+	comes a predefined maven pipeline job, which we can remove and configure our own pipeline
+6. remove the predefined maven task in the job, and add download secured file from library, 
+7. as a second task run a mvn clean or test
+8. as third task add deploy to the profile.
+
+++++++++++++++++++++++++from step 9 it is a improved and a better approach
+9. note: using variables of azure pipeline we can configure username and password
+	instead of variables we can create variable group specify environment specific values here
+10. add a cache job as first task to have faster builds
+
+CI pipeline
+cache job>maven clean text package>copy	jar file to artifact> pulish artifact :drop
+CD pipeline
+from releases create a release pipeline with azure app service deployment
+select artifact from our ci pipeline job name ,we can add another job for deployment to another
+environment, select link variable group
+
+CI job (agent ubuntu 16.04 would work fine)
+create the dev env and test env variable groups
+  
+1. cache job needs key and path
+key is path to pom.xml ir ${Build.SourcesDirectory}/pom.xml
+path is ${MAVEN_CACHE_FOLDER}
+2. in maven job have goal as clean package
+3. in the copy to artifact staging dirctory set copy path as "**/target/*.jar"
+4. set $(Build.ArtifactStagingDirectory) as publish artifact staging directory
+now enable CI as automatic, it is cureently manual by using the trigger option,  
+enable continous integration for the branch either master or main
+
+CD job
+references:
+https://apisero.com/azure-devops-mulesoft/
+https://saamaanalytics.com/deploying-mule-application-using-azure-devops/

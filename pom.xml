@@ -19,80 +19,6 @@
 		<mule.maven.plugin.version>3.5.2</mule.maven.plugin.version>
 		<munit.version>2.3.6</munit.version>
 	</properties>
-	<profiles>
-		<profile>
-			<id>dev</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-clean-plugin</artifactId>
-						<version>3.0.0</version>
-					</plugin>
-					<plugin>
-						<groupId>org.mule.tools.maven</groupId>
-						<artifactId>mule-maven-plugin</artifactId>
-						<version>${mule.maven.plugin.version}</version>
-						<extensions>true</extensions>
-						<configuration>
-							<cloudHubDeployment>
-								<applicationName>uho-dev-uhub-sis-api</applicationName>
-								<environment>dev</environment>
-								<region>us-east-1</region>
-								<workers>1</workers>
-								<workerType>MICRO</workerType>
-								<properties>
-									<env>dev</env>
-									<sec.key>${sec.key}</sec.key>
-									<api.id>17402838</api.id>
-									<anypoint.platform.client_id>${anypoint.platform.client_id}</anypoint.platform.client_id>
-									<anypoint.platform.client_secret>${anypoint.platform.client_secret}</anypoint.platform.client_secret>
-								</properties>
-							</cloudHubDeployment>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>test</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-clean-plugin</artifactId>
-						<version>3.0.0</version>
-					</plugin>
-					<plugin>
-						<groupId>org.mule.tools.maven</groupId>
-						<artifactId>mule-maven-plugin</artifactId>
-						<version>${mule.maven.plugin.version}</version>
-						<extensions>true</extensions>
-						<configuration>
-							<cloudHubDeployment>
-								<uri>https://anypoint.mulesoft.com</uri>
-								<muleVersion>${app.runtime}</muleVersion>
-								<applicationName>uho-test-uhub-sapi</applicationName>
-								<environment>test</environment>
-								<region>us-east-1</region>
-								<workers>1</workers>
-								<workerType>MICRO</workerType>
-								<properties>
-									<http.port>8081</http.port>
-									<env>test</env>
-									<sec.key>${sec.key}</sec.key>
-									<api.id>17402841</api.id>
-									<anypoint.platform.client_id>${anypoint.platform.client_id}</anypoint.platform.client_id>
-									<anypoint.platform.client_secret>${anypoint.platform.client_secret}</anypoint.platform.client_secret>
-								</properties>
-							</cloudHubDeployment>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -116,9 +42,19 @@
 						<username>${username}</username>
 						<password>${password}</password>
 						<objectStoreV2>true</objectStoreV2>
+						<applicationName>${app-name}</applicationName>
+						<environment>${env}</environment>
+						<region>${region}</region>
+						<workers>${workers}</workers>
+						<workerType>${workerType}</workerType>
 						<properties>
+							<http.port>8081</http.port>
+							<envi>${envi}</envi>
+							<sec.key>${sec.key}</sec.key>	
 							<anypoint.platform.base_uri>https://anypoint.mulesoft.com/</anypoint.platform.base_uri>
 							<anypoint.platform.analytics_base_uri>https://analytics-ingest.anypoint.mulesoft.com/</anypoint.platform.analytics_base_uri>
+							<anypoint.platform.client_id>${anypoint.platform.client_id}</anypoint.platform.client_id>
+							<anypoint.platform.client_secret>${anypoint.platform.client_secret}</anypoint.platform.client_secret>
 						</properties>
 					</cloudHubDeployment>
 					<sharedLibraries>
@@ -161,7 +97,6 @@
 							<format>console</format>
 							<format>html</format>
 						</formats>
-
 					</coverage>
 				</configuration>
 			</plugin>
@@ -214,6 +149,7 @@
 			<version>1.10.6</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
+
 		<!--<dependency>
 			<groupId>23392d43-cbba-4944-843b-46d85fb6d2a2</groupId>
 			<artifactId>uhub_sapi</artifactId>
@@ -221,6 +157,7 @@
 			<classifier>raml</classifier>
 			<type>zip</type>
 		</dependency>-->
+
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
 			<artifactId>ojdbc8</artifactId>

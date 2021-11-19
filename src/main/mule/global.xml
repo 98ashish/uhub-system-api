@@ -18,8 +18,8 @@ http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/sc
         <db:oracle-connection host="${secure::db.host}" port="${secure::db.port}" user="${secure::db.user}" password="${secure::db.password}" instance="${secure::db.sid}" />
     </db:config>
     <global-property doc:name="Global Property" doc:id="ef782b66-c8f1-4325-a40e-dc819e034eb3" name="sec.key" value="ashish" />
-    <global-property doc:name="Global Property" doc:id="9cbeb3d2-3435-43b3-9f6c-34e061bd515d" name="env" value="dev" />
-	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="749bd04b-eb57-4b43-b681-ec38d8404bc7" file="properties/${env}.properties" key="${sec.key}" >
+    <global-property doc:name="Global Property" doc:id="9cbeb3d2-3435-43b3-9f6c-34e061bd515d" name="envi" value="dev" />
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="749bd04b-eb57-4b43-b681-ec38d8404bc7" file="properties/${envi}.properties" key="${sec.key}" >
 		<secure-properties:encrypt algorithm="Blowfish" />
 	</secure-properties:config>
     
