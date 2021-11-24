@@ -15,12 +15,13 @@ protocols:
 traits:
   transactionId: !include /exchange_modules/23392d43-cbba-4944-843b-46d85fb6d2a2/transaction-header/1.0.0/transaction-header.raml
   clientId: !include /exchange_modules/23392d43-cbba-4944-843b-46d85fb6d2a2/client-id-required/1.0.0/client-id-required.raml
+  state-query-param: !include /uhub_data_types/state-query-param.raml
 
 uses: 
   common-data-types: /exchange_modules/23392d43-cbba-4944-843b-46d85fb6d2a2/common-data-types/1.0.1/common-data-types.raml
   uhub_data_types: /uhub_data_types/uhub_data_types.raml
+  resource-types: /exchange_modules/23392d43-cbba-4944-843b-46d85fb6d2a2/resource-types/1.0.2/resource-types.raml
   
-
 /cases:
   post:
     is: [clientId,transactionId]
@@ -49,3 +50,79 @@ uses:
           application/json:
             type: common-data-types.errortype
             example: !include /examples/503.json
+  put:
+    is: [clientId,transactionId]
+    body:
+      application/json:
+        type: uhub_data_types.case_with_id
+        example: !include /examples/covid-case-update-request.json
+    responses:
+      200:
+        body:
+          application/json:
+            type: uhub_data_types.case_response
+            example: !include /examples/covid-case-response.json
+      400:
+        body:
+          application/json:
+            type: common-data-types.errortype
+            example: !include /examples/400-duplicate-message.json
+      500:
+        body: 
+          application/json:
+            type: common-data-types.errortype
+            example: !include /examples/500.json
+      503:
+        body: 
+          application/json:
+            type: common-data-types.errortype
+            example: !include /examples/503.json
+  /{nationalID}:
+    get:
+      is: [clientId,transactionId]
+      responses:
+        200:
+          body:
+            application/json:
+              type: uhub_data_types.case_response_national_id
+              example: !include /examples/covid-case-update-response.json
+        404:
+          body:
+            application/json:
+              type: common-data-types.errortype
+              example: !include /examples/404.json
+        500:
+          body: 
+            application/json:
+              type: common-data-types.errortype
+              example: !include /examples/500.json
+        503:
+          body: 
+            application/json:
+              type: common-data-types.errortype
+              example: !include /examples/503.json
+/reports:
+  get:
+    is: [state-query-param]
+    responses:
+      200:
+        body:
+          application/json:
+            type: uhub_data_types.report-response 
+            example: !include /examples/reports-response.json
+      500:
+        body:
+          application/json:
+            type: common-data-types.errortype
+            example: !include /examples/500.json
+      503:
+        body:
+          application/json:
+            type: common-data-types.errortype
+            example: !include /examples/503.json
+            
+/health-check:
+  get:
+  type:
+    resource-types.all: 
+      getResponseType: string

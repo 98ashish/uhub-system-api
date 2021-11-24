@@ -1,0 +1,7 @@
+{
+	"code": 404,
+	"message": "Resource not found",
+	"description": "The server has not found anything matching the Request-URI",
+	"dateTime": "2021-05-29T05:58:02Z",
+	"transactionId": "44b32450-61ee-47b4-907d-fa12a69f3c4d"
+}

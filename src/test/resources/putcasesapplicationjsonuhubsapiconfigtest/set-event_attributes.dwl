@@ -1,0 +1,31 @@
+{
+  "headers": {
+    "client-id": "asdreasfsd",
+    "client-secret": "asdfaffasf",
+    "x-transaction-id": "dasdasd",
+    "content-type": "application/json",
+    "user-agent": "PostmanRuntime/7.28.4",
+    "accept": "*/*",
+    "postman-token": "323418d5-47bd-4ed6-b9a5-9222d88a187c",
+    "host": "localhost:8081",
+    "accept-encoding": "gzip, deflate, br",
+    "connection": "keep-alive",
+    "content-length": "449"
+  },
+  "clientCertificate": null,
+  "method": "PUT",
+  "scheme": "http",
+  "queryParams": {},
+  "requestUri": "/api/cases",
+  "queryString": "",
+  "version": "HTTP/1.1",
+  "maskedRequestPath": "/cases",
+  "listenerPath": "/api/*",
+  "relativePath": "/api/cases",
+  "localAddress": "/127.0.0.1:8081",
+  "uriParams": {},
+  "rawRequestUri": "/api/cases",
+  "rawRequestPath": "/api/cases",
+  "remoteAddress": "/127.0.0.1:49547",
+  "requestPath": "/api/cases"
+}

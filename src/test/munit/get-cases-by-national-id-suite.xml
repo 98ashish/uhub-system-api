@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="get-cases-by-national-id-suite.xml" />
+	<munit:test name="get:\cases\(nationalID):uhub_sapi-config-test" doc:id="d74be0c0-81b8-4cca-ab5f-707569b7cd5d" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Get Payload By National Id" doc:id="ba2d7335-b824-4032-9b3f-2a6d722cff53" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="6b51b173-7916-4e1e-8188-c0b87841b9b5" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://getcasesnationalIDuhubsapiconfigtest\mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://getcasesnationalIDuhubsapiconfigtest\mock_variable_.dwl')]" />
+						<munit-tools:variable key="nationalID" value="#[output application/java --- readUrl('classpath://getcasesnationalIDuhubsapiconfigtest\mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="transactionId" value="#[output application/java --- readUrl('classpath://getcasesnationalIDuhubsapiconfigtest\mock_variable_2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Input" doc:id="636f45bd-14a0-4c38-8c94-3eb98317f314">
+				<munit:payload value="#[output application/json --- readUrl('classpath://getcasesnationalIDuhubsapiconfigtest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://getcasesnationalIDuhubsapiconfigtest\set-event_attributes.dwl')]" />
+				<munit:variables>
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://getcasesnationalIDuhubsapiconfigtest\set-event_variable_.dwl')]" />
+					<munit:variable key="transactionId" value="#[output application/java --- readUrl('classpath://getcasesnationalIDuhubsapiconfigtest\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to get:\cases\(nationalID):uhub_sapi-config" doc:id="c1521c11-c5a2-4373-8e17-754933907357" name="get:\cases\(nationalID):uhub_sapi-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="8dde3da6-c2d5-4da6-baf6-64b113156880" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import getcasesnationalIDuhubsapiconfigtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+<munit:test name="get:\cases\(nationalID):uhub_sapi-config-No-Record-test" doc:id="c9035ac6-ef47-4355-acb5-c5403c8b5422" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Get Payload By National Id" doc:id="ba7fcd4c-996f-4576-8da4-52410905d241" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="6b51b173-7916-4e1e-8188-c0b87841b9b5" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- []]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://getcasesnationalIDuhubsapiconfigtest\mock_variable_.dwl')]" />
+						<munit-tools:variable key="nationalID" value="#[output application/java --- readUrl('classpath://getcasesnationalIDuhubsapiconfigtest\mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="transactionId" value="#[output application/java --- readUrl('classpath://getcasesnationalIDuhubsapiconfigtest\mock_variable_2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Input" doc:id="41a7ec04-547a-466f-a474-412be4e95df4">
+				<munit:payload value="#[output application/json --- readUrl('classpath://getcasesnationalIDuhubsapiconfigtest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://getcasesnationalIDuhubsapiconfigtest\set-event_attributes.dwl')]" />
+				<munit:variables>
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://getcasesnationalIDuhubsapiconfigtest\set-event_variable_.dwl')]" />
+					<munit:variable key="transactionId" value="#[output application/java --- readUrl('classpath://getcasesnationalIDuhubsapiconfigtest\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to get:\cases\(nationalID):uhub_sapi-config" doc:id="844fb0a7-7685-4a78-83fd-d217c19769f6" name="get:\cases\(nationalID):uhub_sapi-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="ebe32b78-6044-4794-89e4-b362e41588b7" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import getcasesnationalIDuhubsapiconfigtest::assert_expression_payload_no_record
+---
+assert_expression_payload_no_record::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="get-by-national-id-test" doc:id="7fcde065-fb07-4cc5-be8e-72ac50974a98" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Get By National Id" doc:id="7fc02066-3783-492a-ada1-a548052f9983" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ec183874-9884-4be0-8e2e-3f7491b63f77" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://getbynationalidtest\mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://getbynationalidtest\mock_variable_.dwl')]" />
+						<munit-tools:variable key="nationalID" value="#[output application/java --- readUrl('classpath://getbynationalidtest\mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="transactionId" value="#[output application/java --- readUrl('classpath://getbynationalidtest\mock_variable_2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Input" doc:id="98799216-87f0-4c02-9a4c-cde353ff9d71">
+				<munit:payload value="#[output application/json --- readUrl('classpath://getbynationalidtest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://getbynationalidtest\set-event_attributes.dwl')]" />
+				<munit:variables>
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://getbynationalidtest\set-event_variable_.dwl')]" />
+					<munit:variable key="nationalID" value="#[output application/java --- readUrl('classpath://getbynationalidtest\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variable key="transactionId" value="#[output application/java --- readUrl('classpath://getbynationalidtest\set-event_variable_2.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to get-by-national-id" doc:id="ff39d207-d10e-460c-a06a-f33f18df0213" name="get-by-national-id"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="fb58a0f8-b944-4bf6-abbf-e617c6a9dad0" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import getbynationalidtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+
+</mule>

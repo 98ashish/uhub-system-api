@@ -6,6 +6,10 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="global-error-handler-sub-flow" doc:id="eeee3150-2957-441f-b66b-8cc89e7ab489" >
+		<set-variable value="#[payload.code]" doc:name="Set httpStatus" doc:id="6a372418-e11a-478e-ab69-abd1eda4b616" variableName="httpStatus" />
+		<logger level="INFO" doc:name="Error Log" doc:id="34ca51e9-aefa-4454-951d-4eb9f05308df" message="Transaction [#[vars.transactionId]] - Error Code [#[vars.httpStatus]] - Error Message [#[error.errorType.identifier default '']] - Error Description [#[error.description default '']]-Payload[#[payload]]" />
+	</sub-flow>
 	<error-handler name="global-error-handler"
 		doc:id="62689d05-fe06-4ce5-99d5-43e5c408a301">
 		<on-error-propagate enableNotifications="true"
@@ -37,9 +41,9 @@ var detailedDescription=["APIKIT:BAD_REQUEST"]
                         <ee:set-variable variableName="httpStatus"><![CDATA[400]]></ee:set-variable>
                     </ee:variables>
                 </ee:transform>
-                <set-variable value="#[payload.code]" doc:name="Set httpStatus" doc:id="6a372418-e11a-478e-ab69-abd1eda4b616" variableName="httpStatus"/>
-			<logger level="INFO" doc:name="Error Log" doc:id="34ca51e9-aefa-4454-951d-4eb9f05308df" message="Transaction [#[vars.transactionId]] - Error Code [#[vars.httpStatus]] - Error Message [#[error.errorType.identifier default '']] - Error Description [#[error.description default '']]-Payload[#[payload]]"/>
-            </on-error-propagate>
+			<flow-ref doc:name="Flow Reference" doc:id="ef28d4ec-8a77-4b26-801f-f1e1749eeea6" name="global-error-handler-sub-flow" />
+            
+</on-error-propagate>
 		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="d781425d-7de3-449f-8558-409dc9dec175" >
 			<set-variable
 				value="#[output application/json --- readUrl('classpath://error/mule_warnings.json')]"
@@ -57,8 +61,7 @@ output application/json
 					<ee:set-variable variableName="httpStatus" ><![CDATA[400]]></ee:set-variable>
 				</ee:variables>
 			</ee:transform>
-			<set-variable value="#[payload.code]" doc:name="Set httpStatus" doc:id="672cfcf6-e611-4033-b9c4-8a479861c477" variableName="httpStatus" />
-			<logger level="INFO" doc:name="Error Log" doc:id="93ba70c6-b929-4efd-a0a1-8b03970d6a6d" message="Transaction [#[vars.transactionId]] - Error Code [#[vars.httpStatus]] - Error Message [#[error.errorType.identifier default '']] - Error Description [#[error.description default '']]-Payload[#[payload]]"/>
+			<flow-ref doc:name="Flow Reference" doc:id="0276431d-9f93-46f4-8f16-3fd2733ad91c" name="global-error-handler-sub-flow" />
 		</on-error-continue>
         
 </error-handler>

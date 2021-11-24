@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="health-check-suite.xml" />
+	<munit:test name="get:\health-check:uhub_sapi-config-test" doc:id="4f8ab167-e706-41a7-9219-5d6890703fc9" >
+		<munit:execution >
+			<munit:set-event doc:name="Set Input" doc:id="491ddda1-5ac8-4b07-a489-d7106a8ea30f">
+				<munit:payload value="#[output application/json --- readUrl('classpath://gethealthcheckuhubsapiconfigtest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://gethealthcheckuhubsapiconfigtest\set-event_attributes.dwl')]" />
+				<munit:variables>
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://gethealthcheckuhubsapiconfigtest\set-event_variable_.dwl')]" />
+					<munit:variable key="transactionId" value="#[output application/java --- readUrl('classpath://gethealthcheckuhubsapiconfigtest\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to get:\health-check:uhub_sapi-config" doc:id="dd45b22f-f204-4340-a6d2-cfdd9a0629a8" name="get:\health-check:uhub_sapi-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="f7cb36a0-a430-4ef6-8b20-375e19097047" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import gethealthcheckuhubsapiconfigtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

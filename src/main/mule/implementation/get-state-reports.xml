@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<flow name="get:\reports:uhub_sapi-config">
+	<logger level="INFO" doc:name="Start Log" doc:id="a7363cec-879a-4dcf-a269-ceb1e88f7cef" message="transactionID: #[vars.transactionId]], message: fetch covid case_type by State, State: #[attributes.queryParams.state]"/>
+	
+        <ee:transform doc:name="Build query" doc:id="c253cdd4-3d54-472d-8f13-4b6a416c8a5f" >
+			<ee:variables >
+				<ee:set-variable variableName="where_state_is" ><![CDATA[if(isEmpty(attributes.queryParams.state)) ""
+else "where state= '" ++ attributes.queryParams.state ++ "'"]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="Fetch Reports By State" doc:id="f666c640-bfe4-4d4a-bca2-8185163c2283" name="get-reports-by-state" />
+		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:name="Build response Payload">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload groupBy $.STATE mapObject  {
+    state:$$,
+    reports: $ reduce ((item, acc={total:0}) -> 
+    	(acc  update {case tot at .total if((item.CASE_TYPE)!="vaccinated")->  tot+item.COUNT}) 
+        ++ 
+        ((item.CASE_TYPE):item.COUNT))
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <logger level="INFO" doc:name="End Log" doc:id="a48789d7-88ef-4712-a672-73da075fcbf6" message="transactionID: #[vars.transactionId]], message: fetched covid case_type by State, State: #[attributes.queryParams.state]"/>
+	
+    </flow>
+	
+	
+</mule>
