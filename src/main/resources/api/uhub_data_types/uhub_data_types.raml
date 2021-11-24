@@ -15,9 +15,9 @@ types:
         type: 
           enum:
             - positive
-            - recovered
             - death
             - vaccinated
+            - negative
       firstName:
         type: string
         maxLength: 20
@@ -79,8 +79,200 @@ types:
             required: true
             minLength: 1
             maxLength: 30
+  case_with_id:
+    type: object
+    properties:
+      caseID:
+        type: string
+        required: true
+        minLength: 1
+        maxLength: 20
+      source:
+        type: string
+        maxLength: 60
+        minLength: 1
+        required: true
+      caseType:
+        required: true
+        type: 
+          enum:
+            - positive
+            - death
+            - vaccinated
+            - negative
+      firstName:
+        type: string
+        maxLength: 20
+        minLength: 1
+        required: true
+      lastName: 
+        type: string
+        maxLength: 20
+        minLength: 1
+        required: true
+      dateOfBirth:
+        type: date-only
+        required: true
+      phone:
+        type: string
+        required: true
+        minLength: 1
+        maxLength: 12  
+      email:
+        type: string
+        required: false
+        minLength: 1
+        maxLength: 50 
+      nationalID:
+        type: string
+        required: true
+        minLength: 1
+        maxLength: 20
+      nationalIDType:
+        type: string
+        required: true
+        minLength: 1
+        maxLength: 20
+      address:
+        type: object
+        properties:
+          streetAddress:
+            type: string
+            required: true
+            minLength: 1
+            maxLength: 60
+          city:
+            type: string
+            required: true
+            minLength: 1
+            maxLength: 20
+          postal:
+            type: string
+            required: true
+            minLength: 1
+            maxLength: 20
+          state:
+            type: string
+            required: true
+            minLength: 1
+            maxLength: 30
+          country:
+            type: string
+            required: true
+            minLength: 1
+            maxLength: 30
+  case_response_national_id:
+    type: array
+    items:
+      properties:
+        caseID:
+          type: string
+          required: true
+          minLength: 1
+          maxLength: 20
+        source:
+          type: string
+          maxLength: 60
+          minLength: 1
+          required: true
+        caseType:
+          required: true
+          type: 
+            enum:
+              - positive
+              - death
+              - vaccinated
+              - negative
+        firstName:
+          type: string
+          maxLength: 20
+          minLength: 1
+          required: true
+        lastName: 
+          type: string
+          maxLength: 20
+          minLength: 1
+          required: true
+        dateOfBirth:
+          type: date-only
+          required: true
+        phone:
+          type: string
+          required: true
+          minLength: 1
+          maxLength: 12  
+        email:
+          type: string
+          required: false
+          minLength: 1
+          maxLength: 50 
+        nationalID:
+          type: string
+          required: true
+          minLength: 1
+          maxLength: 20
+        nationalIDType:
+          type: string
+          required: true
+          minLength: 1
+          maxLength: 20
+        address:
+          type: object
+          properties:
+            streetAddress:
+              type: string
+              required: true
+              minLength: 1
+              maxLength: 60
+            city:
+              type: string
+              required: true
+              minLength: 1
+              maxLength: 20
+            postal:
+              type: string
+              required: true
+              minLength: 1
+              maxLength: 20
+            state:
+              type: string
+              required: true
+              minLength: 1
+              maxLength: 30
+            country:
+              type: string
+              required: true
+              minLength: 1
+              maxLength: 30
+        createDate:
+          type: date-only
+          required: true
+        updateDate:
+          type: date-only
+          required: true
   case_response:
     type: object
     properties:
       caseID:
         type: string
+  report-response:
+    type: array
+    items:
+      type: object
+      properties:
+        state:
+          type: string
+        report:  
+          type: object
+          properties:
+            total:
+              type: string
+            positive:
+              type: string
+            recovered:
+              type: string
+            death:
+              type: string
+            vaccinated:
+              type: string
+            

@@ -1,0 +1,31 @@
+{
+  "headers": {
+    "client-id": "asdreasfsd",
+    "client-secret": "asdfaffasf",
+    "x-transaction-id": "dasdasd",
+    "content-type": "application/json",
+    "user-agent": "PostmanRuntime/7.28.4",
+    "accept": "*/*",
+    "postman-token": "91d75bef-3852-46d8-8144-43df2e4d5701",
+    "host": "localhost:8081",
+    "accept-encoding": "gzip, deflate, br",
+    "connection": "keep-alive",
+    "content-length": "451"
+  },
+  "clientCertificate": null,
+  "method": "GET",
+  "scheme": "http",
+  "queryParams": {},
+  "requestUri": "/api/health-check",
+  "queryString": "",
+  "version": "HTTP/1.1",
+  "maskedRequestPath": "/health-check",
+  "listenerPath": "/api/*",
+  "relativePath": "/api/health-check",
+  "localAddress": "/127.0.0.1:8081",
+  "uriParams": {},
+  "rawRequestUri": "/api/health-check",
+  "rawRequestPath": "/api/health-check",
+  "remoteAddress": "/127.0.0.1:64411",
+  "requestPath": "/api/health-check"
+}

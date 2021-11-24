@@ -9,6 +9,31 @@
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 
+	<sub-flow name="get-reports-by-state" doc:id="e08c1d4b-312d-48c3-8521-12347f9e242a" >
+		<logger level="DEBUG" doc:name="Start Log"
+			doc:id="5f207a91-7892-4af8-8019-a81765e92d52"
+			message='transactionID: #[vars.transactionId]], message: "Before selecting case database call", State: #[attributes.queryParams.state]' />
+		<db:select doc:name="Select Casetype By State" doc:id="66b3c076-8397-4f48-8f5e-0a6b3a9cd235" config-ref="Database_Config">
+			<db:sql><![CDATA[#["select count(*) as count , case_type, state from cvd_case_master $(vars.where_state_is) group by case_type, state"]]]></db:sql>
+		</db:select>
+		<logger level="DEBUG" doc:name="End Log"
+			doc:id="9cb51284-fff1-48b7-a341-61e4de94b343"
+			message='transactionID: #[vars.transactionId]], message: "After selecting cases database call",  State: #[attributes.queryParams.state]' />
+		
+	</sub-flow>
+	<sub-flow name="get-by-national-id" doc:id="5f55f3ac-01ec-4b30-8b2e-db63f637b79f" >
+	<logger level="DEBUG" doc:name="Start Log"
+			doc:id="a64b5113-f92d-439b-8164-687a8776b50a"
+			message='transactionID: #[vars.transactionId]], message: "Before selecting case database call", nationalId: #[vars.nationalId]' />
+		
+		<db:select doc:name="Get By National Id" doc:id="ec183874-9884-4be0-8e2e-3f7491b63f77" config-ref="Database_Config">
+			<db:sql><![CDATA[select source, CASE_ID,case_type, first_name, last_name, phone, email, date_of_birth, national_id, national_id_type, street_address, city, state, postal, country, create_date, update_date from cvd_case_master where national_id=:national_id ]]></db:sql>
+			<db:input-parameters><![CDATA[#[{national_id:vars.nationalID}]]]></db:input-parameters>
+		</db:select>
+		<logger level="DEBUG" doc:name="End Log"
+			doc:id="e9f219d3-ab1c-47e2-bfa1-62088cc47395"
+			message='transactionID: #[vars.transactionId]], message: "After selecting cases database call", nationalId: #[vars.nationalId]' />
+	</sub-flow>
 	<sub-flow name="insert-covid-case-sub-flow"
 		doc:id="5fe4a8f6-3e2e-428d-8b97-008c53ae7585">
 		<logger level="DEBUG" doc:name="Start Log"
@@ -28,5 +53,13 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 			doc:id="139576a8-fc9a-439d-b409-088ab69c1bb0"
 			message='transactionID: #[vars.transactionId]], message: "After insert case database call", payload: #[payload]' />
 		
+	</sub-flow>
+	<sub-flow name="update-covid-case-sub-flow" doc:id="70f9b3f0-b1b4-40fb-9fb4-15f7124b6fbf" >
+		<logger level="DEBUG" doc:name="Start Log" doc:id="33c47623-f4e4-402e-aed9-39b06185ae04" message='transactionID: #[vars.transactionId]], message: "Before insert case database call", payload: #[payload]' />
+		<db:update doc:name="Update" doc:id="eaec7007-5cf5-4da9-abea-4e0f63ad0d8f" config-ref="Database_Config">
+			<db:sql ><![CDATA[update cvd_case_master set SOURCE= :SOURCE,CASE_TYPE= :CASE_TYPE, FIRST_NAME= :FIRST_NAME, LAST_NAME= :LAST_NAME, PHONE= :PHONE, EMAIL= :EMAIL, DATE_OF_BIRTH=TO_DATE(:DATE_OF_BIRTH, 'YYYY-MM-DD') , NATIONAL_ID= :NATIONAL_ID, NATIONAL_ID_TYPE= :NATIONAL_ID_TYPE, STREET_ADDRESS= :STREET_ADDRESS, CITY= :CITY, STATE= :STATE, POSTAL= :POSTAL, COUNTRY= :COUNTRY, UPDATE_DATE=TO_DATE(:UPDATE_DATE, 'YYYY-MM-DD') , CREATE_BY= :CREATE_BY, UPDATE_BY= :UPDATE_BY where CASE_ID= :CASE_ID ]]></db:sql>
+			<db:input-parameters ><![CDATA[#[vars.covid_case_payload]]]></db:input-parameters>
+		</db:update>
+		<logger level="DEBUG" doc:name="End Log" doc:id="b95edc26-5af3-403b-9927-bd0f4bdf3b56" message='transactionID: #[vars.transactionId]], message: "After insert case database call", payload: #[payload]' />
 	</sub-flow>
 </mule>

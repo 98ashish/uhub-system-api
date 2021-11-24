@@ -1,0 +1,20 @@
+{
+  "CASE_ID": "121",
+  "SOURCE": "Hospital3",
+  "CASE_TYPE": "positive",
+  "FIRST_NAME": "John",
+  "LAST_NAME": "Nixon",
+  "PHONE": "541-754-3010",
+  "EMAIL": "john@gmail.com",
+  "DATE_OF_BIRTH": "1989-04-26",
+  "NATIONAL_ID": "209-49-6193",
+  "NATIONAL_ID_TYPE": "SSN",
+  "STREET_ADDRESS": "1600 Pennsylvania Avenue NW",
+  "CITY": "Washington",
+  "STATE": "dc",
+  "POSTAL": "20500",
+  "COUNTRY": "USA",
+  "UPDATE_DATE": "2021-11-23",
+  "CREATE_BY": "UHIS",
+  "UPDATE_BY": "UHIS"
+}
